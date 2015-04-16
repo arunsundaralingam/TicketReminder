@@ -38,6 +38,7 @@ public class DBManager {
         data.close();
         return actualData;
     }
+
     private void getClasses() {
         TypedArray typedArray = context.getResources().obtainTypedArray(R.array.patch);
         int numberOfPatches = typedArray.length();

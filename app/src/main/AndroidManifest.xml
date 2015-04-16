@@ -16,6 +16,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".BaseVacationActivity"
+            android:label="Ticket" >
+        </activity><activity
+            android:name=".AddVacationActivity"
+            android:label="Ticket" >
+    </activity>
+
     </application>
 
 </manifest>

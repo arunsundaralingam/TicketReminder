@@ -1,6 +1,7 @@
 package com.tw.ticket.app;
 
 import android.annotation.TargetApi;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -74,9 +75,13 @@ public class ShowCalendarActivity extends ActionBarActivity {
 
     private void registerAddButtonListener() {
         buttonView.setOnClickListener(new View.OnClickListener() {
+            @TargetApi(Build.VERSION_CODES.HONEYCOMB)
             @Override
             public void onClick(View view) {
-                dbManager.insertAValue();
+//                dbManager.insertAValue();
+                Intent intent = new Intent(getApplicationContext(), AddVacationActivity.class);
+                intent.putExtra("vacationDate", calendarView.getDate());
+                startActivity(intent);
             }
         });
     }
