@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="patch">
+        <item>com.tw.ticket.migration.Version1</item>
+    </array>
+</resources>
