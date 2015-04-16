@@ -4,16 +4,23 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
+import com.tw.ticket.db.DBManager;
 
 
 public class BaseVacationActivity extends ActionBarActivity {
-
+    protected DBManager dbManager;
     protected TextView vacationDateTextView;
+    protected View doneButtonView;
+    protected EditText vacationNameText;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (dbManager == null) dbManager = new DBManager(getApplicationContext());
         setContentView(R.layout.activity_base_vacation);
     }
 

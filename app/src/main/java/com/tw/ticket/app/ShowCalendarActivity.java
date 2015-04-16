@@ -78,7 +78,6 @@ public class ShowCalendarActivity extends ActionBarActivity {
             @TargetApi(Build.VERSION_CODES.HONEYCOMB)
             @Override
             public void onClick(View view) {
-//                dbManager.insertAValue();
                 Intent intent = new Intent(getApplicationContext(), AddVacationActivity.class);
                 intent.putExtra("vacationDate", calendarView.getDate());
                 startActivity(intent);
