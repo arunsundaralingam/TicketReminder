@@ -2,8 +2,9 @@ package com.tw.ticket.db;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import com.j256.ormlite.android.apptools.OpenHelperManager;
+import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.tw.ticket.app.R;
 import com.tw.ticket.migration.Patch;
 import com.tw.ticket.models.Vacation;
@@ -14,30 +15,31 @@ import java.util.List;
 
 @Singleton
 public class DBManager {
-    Context context;
-    Patch[] patches;
-    MigrationHelper migrationHelper;
-    SQLiteDatabase db;
+    private Context context;
+    private Patch[] patches;
+    private MigrationHelper migrationHelper;
+    private SQLiteDatabase db;
+    private RuntimeExceptionDao<Vacation, ?> dao;
+
+    static {
+        OpenHelperManager.setOpenHelperClass(MigrationHelper.class);
+    }
 
     public DBManager(Context context) {
         this.context = context;
         getClasses();
         migrationHelper = new MigrationHelper(context, patches);
         db = migrationHelper.getWritableDatabase();
+        dao = migrationHelper.getRuntimeExceptionDao(Vacation.class);
     }
 
-    public void addVacation(Vacation vacation) {
-        db.execSQL("insert into Vacation(name,date,status) values (?,?,?)",
-                new String[]{vacation.getName(), vacation.getDate().toString(), "status"});
+    public void addOrUpdate(Vacation vacation) {
+        dao.createOrUpdate(vacation);
     }
 
     public List<String> readAllValues() {
-        Cursor data = db.rawQuery("select * from Vacation", null);
         List<String> actualData = new ArrayList<String>();
-        while (data.moveToNext()) {
-            actualData.add(data.getString(1));
-        }
-        data.close();
+        List<Vacation> vacations = dao.queryForAll();
         return actualData;
     }
 

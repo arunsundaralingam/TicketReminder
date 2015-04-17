@@ -40,7 +40,7 @@ public class AddVacationActivity extends BaseVacationActivity {
                 vacationNameText = (EditText) findViewById(R.id.vacationText);
                 String vacationName = vacationNameText.getText().toString();
                 if (vacationName != null && !vacationName.equals("")) {
-                    dbManager.addVacation(new Vacation(vacationName, getVacationDate()));
+                    dbManager.addOrUpdate(new Vacation(vacationName, getVacationDate()));
                 } else {
                     showToast("Vacation Name must be specified");
                 }

@@ -1,0 +1,21 @@
+#
+# generated on 2015/04/17 04:05:14
+#
+# --table-start--
+dataClass=com.tw.ticket.models.Vacation
+tableName=vacation
+# --table-fields-start--
+# --field-start--
+fieldName=id
+generatedId=true
+# --field-end--
+# --field-start--
+fieldName=name
+indexName=vacation_name_idx
+# --field-end--
+# --field-start--
+fieldName=date
+# --field-end--
+# --table-fields-end--
+# --table-end--
+#################################
