@@ -11,25 +11,33 @@
     <LinearLayout
             android:orientation="vertical"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent" android:weightSum="1">
+            android:layout_height="fill_parent" android:weightSum="1" android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" android:layout_alignParentTop="true"
+            android:layout_alignParentBottom="true">
         <LinearLayout
                 android:orientation="horizontal"
-                android:layout_width="363dp"
+                android:layout_width="match_parent"
                 android:layout_height="67dp">
             <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Vacation name"
                     android:id="@+id/textView2"/>
-            <EditText
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/vacationText" android:layout_weight="1"/>
+            <ScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/scrollView2">
+                <EditText
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/vacationText" android:layout_weight="1"/>
+            </ScrollView>
         </LinearLayout>
         <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="306dp" android:layout_weight="1.02">
+                android:layout_height="251dp">
         </LinearLayout>
         <LinearLayout
                 android:orientation="horizontal"
