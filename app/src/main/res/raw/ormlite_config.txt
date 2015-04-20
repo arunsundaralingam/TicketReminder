@@ -1,20 +1,19 @@
 #
-# generated on 2015/04/17 04:05:14
+# generated on 2015/04/20 05:09:01
 #
 # --table-start--
 dataClass=com.tw.ticket.models.Vacation
 tableName=vacation
 # --table-fields-start--
 # --field-start--
-fieldName=id
-generatedId=true
-# --field-end--
-# --field-start--
 fieldName=name
-indexName=vacation_name_idx
+columnName=name
+id=true
 # --field-end--
 # --field-start--
 fieldName=date
+dataPersister=DATE_LONG
+format=dd-MMM-yyyy
 # --field-end--
 # --table-fields-end--
 # --table-end--

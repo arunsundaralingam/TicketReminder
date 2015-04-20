@@ -12,7 +12,9 @@ import android.widget.CalendarView;
 import android.widget.TextView;
 import com.tw.ticket.db.DBManager;
 import com.tw.ticket.models.Vacation;
+import com.tw.ticket.util.DateUtil;
 
+import java.util.Calendar;
 import java.util.List;
 
 
@@ -21,6 +23,7 @@ public class ShowCalendarActivity extends ActionBarActivity {
     CalendarView calendarView;
     View buttonView;
     TextView vacationInfoView;
+    long selectedDate;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,6 +32,7 @@ public class ShowCalendarActivity extends ActionBarActivity {
         registerComponents();
         registerCalendarListener();
         registerAddButtonListener();
+        selectedDate = calendarView.getDate();
     }
 
     @Override
@@ -64,15 +68,24 @@ public class ShowCalendarActivity extends ActionBarActivity {
             @Override
             public void onSelectedDayChange(CalendarView view, int year, int month,
                                             int dayOfMonth) {
+                setSelectedDate(year, month, dayOfMonth);
                 List<Vacation> values = dbManager.readAllValues();
                 String displayString = "<<";
                 for(Vacation val : values){
-                    displayString += val.getName();
+                    displayString += DateUtil.formatDateString(val.getDate());
                 }
                 vacationInfoView.setText(displayString+">>");
             }
         });
     }
+
+    private void setSelectedDate(int year, int month, int dayOfMonth) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(year, month, dayOfMonth);
+        DateUtil.resetTimeToMidnight(calendar);
+        selectedDate = calendar.getTime().getTime();
+    }
+
 
     private void registerAddButtonListener() {
         buttonView.setOnClickListener(new View.OnClickListener() {
@@ -80,7 +93,7 @@ public class ShowCalendarActivity extends ActionBarActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(), AddVacationActivity.class);
-                intent.putExtra("vacationDate", calendarView.getDate());
+                intent.putExtra("vacationDate", selectedDate);
                 startActivity(intent);
             }
         });

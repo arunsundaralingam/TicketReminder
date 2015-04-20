@@ -7,8 +7,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.tw.ticket.models.Vacation;
+import com.tw.ticket.util.DateUtil;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class AddVacationActivity extends BaseVacationActivity {
@@ -21,8 +21,7 @@ public class AddVacationActivity extends BaseVacationActivity {
     }
 
     private void loadDate() {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy");
-        String formattedDate = dateFormat.format(getVacationDate());
+        String formattedDate = DateUtil.formatDateString(getVacationDate());
         vacationDateTextView = (TextView) findViewById(R.id.addOrEditTextView);
         vacationDateTextView.setText("Add vacation for date\n" + formattedDate);
     }
