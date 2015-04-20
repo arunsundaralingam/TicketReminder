@@ -10,7 +10,6 @@ import com.tw.ticket.migration.Patch;
 import com.tw.ticket.models.Vacation;
 
 import javax.inject.Singleton;
-import java.util.ArrayList;
 import java.util.List;
 
 @Singleton
@@ -37,10 +36,9 @@ public class DBManager {
         dao.createOrUpdate(vacation);
     }
 
-    public List<String> readAllValues() {
-        List<String> actualData = new ArrayList<String>();
+    public List<Vacation> readAllValues() {
         List<Vacation> vacations = dao.queryForAll();
-        return actualData;
+        return vacations;
     }
 
     private void getClasses() {

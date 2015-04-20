@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.CalendarView;
 import android.widget.TextView;
 import com.tw.ticket.db.DBManager;
+import com.tw.ticket.models.Vacation;
 
 import java.util.List;
 
@@ -63,10 +64,10 @@ public class ShowCalendarActivity extends ActionBarActivity {
             @Override
             public void onSelectedDayChange(CalendarView view, int year, int month,
                                             int dayOfMonth) {
-                List<String> values = dbManager.readAllValues();
+                List<Vacation> values = dbManager.readAllValues();
                 String displayString = "<<";
-                for(String val : values){
-                    displayString += val;
+                for(Vacation val : values){
+                    displayString += val.getName();
                 }
                 vacationInfoView.setText(displayString+">>");
             }

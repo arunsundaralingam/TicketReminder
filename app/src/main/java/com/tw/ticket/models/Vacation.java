@@ -2,6 +2,8 @@ package com.tw.ticket.models;
 
 import com.j256.ormlite.field.DatabaseField;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Vacation {
@@ -21,14 +23,20 @@ public class Vacation {
     }
 
     public void setDate(Date date) {
-        this.date = date;
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSSSS");
+        String formattedDateAsString = format.format(date);
+        try {
+            this.date = format.parse(formattedDateAsString);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
     }
     @DatabaseField(generatedId = true)
-    int id;
+    private int id;
     @DatabaseField(index = true)
-    String name;
+    private String name;
     @DatabaseField
-    Date date;
+    private Date date;
 
     public Vacation(String name, Date date) {
         this.name = name;
