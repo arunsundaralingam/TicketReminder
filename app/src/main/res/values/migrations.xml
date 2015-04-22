@@ -2,5 +2,8 @@
 <resources>
     <array name="patch">
         <item>com.tw.ticket.migration.Version1</item>
+        <item>com.tw.ticket.migration.Version2</item>
+        <item>com.tw.ticket.migration.Version3</item>
+        <item>com.tw.ticket.migration.Version4</item>
     </array>
 </resources>

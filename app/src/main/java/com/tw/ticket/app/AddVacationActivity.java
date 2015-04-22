@@ -5,9 +5,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 import com.tw.ticket.models.Vacation;
 import com.tw.ticket.util.DateUtil;
+import com.tw.ticket.util.UIUtil;
 
 import java.util.Date;
 
@@ -26,11 +26,6 @@ public class AddVacationActivity extends BaseVacationActivity {
         vacationDateTextView.setText("Add vacation for date\n" + formattedDate);
     }
 
-    private Date getVacationDate() {
-        Object longDate = getIntent().getExtras().get("vacationDate");
-        return new Date((Long) longDate);
-    }
-
     private void registerDoneButtonListener() {
         doneButtonView = findViewById(R.id.button);
         doneButtonView.setOnClickListener(new View.OnClickListener() {
@@ -39,16 +34,17 @@ public class AddVacationActivity extends BaseVacationActivity {
                 vacationNameText = (EditText) findViewById(R.id.vacationText);
                 String vacationName = vacationNameText.getText().toString();
                 if (vacationName != null && !vacationName.equals("")) {
-                    dbManager.addOrUpdate(new Vacation(vacationName, getVacationDate()));
+                    vacationRepository.addOrUpdate(new Vacation(vacationName, getVacationDate()));
                 } else {
-                    showToast("Vacation Name must be specified");
+                    UIUtil.showToast(applicationContext, "Vacation Name must be specified");
                 }
             }
         });
     }
 
-    private void showToast(String message) {
-        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
+    private Date getVacationDate() {
+        Object longDate = getIntent().getExtras().get("vacationDate");
+        return new Date((Long) longDate);
     }
 }
 

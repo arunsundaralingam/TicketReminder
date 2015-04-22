@@ -7,10 +7,10 @@ import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.tw.ticket.app.R;
 import com.tw.ticket.migration.Patch;
+import com.tw.ticket.models.Reminder;
 import com.tw.ticket.models.Vacation;
 
 import javax.inject.Singleton;
-import java.util.List;
 
 @Singleton
 public class DBManager {
@@ -18,7 +18,8 @@ public class DBManager {
     private Patch[] patches;
     private MigrationHelper migrationHelper;
     private SQLiteDatabase db;
-    private RuntimeExceptionDao<Vacation, ?> dao;
+    private RuntimeExceptionDao<Vacation, ?> vacationDAO;
+    private RuntimeExceptionDao<Reminder, ?> reminderDAO;
 
     static {
         OpenHelperManager.setOpenHelperClass(MigrationHelper.class);
@@ -29,16 +30,16 @@ public class DBManager {
         getClasses();
         migrationHelper = new MigrationHelper(context, patches);
         db = migrationHelper.getWritableDatabase();
-        dao = migrationHelper.getRuntimeExceptionDao(Vacation.class);
+        vacationDAO = migrationHelper.getRuntimeExceptionDao(Vacation.class);
+        reminderDAO = migrationHelper.getRuntimeExceptionDao(Reminder.class);
     }
 
-    public void addOrUpdate(Vacation vacation) {
-        dao.createOrUpdate(vacation);
+    public RuntimeExceptionDao getDao(Class model){
+        return migrationHelper.getRuntimeExceptionDao(model);
     }
 
-    public List<Vacation> readAllValues() {
-        List<Vacation> vacations = dao.queryForAll();
-        return vacations;
+    public void addOrUpdateVacation(Vacation vacation) {
+        vacationDAO.createOrUpdate(vacation);
     }
 
     private void getClasses() {

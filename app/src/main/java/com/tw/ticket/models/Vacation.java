@@ -6,17 +6,26 @@ import com.j256.ormlite.field.DatabaseField;
 import java.util.Date;
 
 public class Vacation {
-    @DatabaseField(id=true, columnName = "name")
+    @DatabaseField(generatedId = true)
+    private int id;
+    @DatabaseField
     private String name;
     @DatabaseField(dataType = DataType.DATE_LONG, format = "dd-MMM-yyyy")
     private Date date;
-
     public Vacation() {
     }
 
     public Vacation(String name, Date date) {
         this.name = name;
         this.date = date;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public String getName() {
@@ -34,4 +43,5 @@ public class Vacation {
     public void setDate(Date date) {
         this.date = date;
     }
+
 }

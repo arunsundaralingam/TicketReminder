@@ -1,6 +1,7 @@
 package com.tw.ticket.app;
 
 import android.annotation.TargetApi;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -10,7 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.CalendarView;
 import android.widget.TextView;
-import com.tw.ticket.db.DBManager;
+import com.tw.ticket.db.BaseRepository;
 import com.tw.ticket.models.Vacation;
 import com.tw.ticket.util.DateUtil;
 
@@ -19,15 +20,20 @@ import java.util.List;
 
 
 public class ShowCalendarActivity extends ActionBarActivity {
-    DBManager dbManager;
+    BaseRepository<Vacation> vacationRepository;
     CalendarView calendarView;
     View buttonView;
     TextView vacationInfoView;
     long selectedDate;
+    private Context applicationContext;
 
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (dbManager == null) dbManager = new DBManager(getApplicationContext());
+        applicationContext = getApplicationContext();
+        if (vacationRepository == null) {
+            vacationRepository = new BaseRepository<Vacation>(applicationContext, Vacation.class);
+        }
         setContentView(R.layout.activity_show_calendar);
         registerComponents();
         registerCalendarListener();
@@ -59,7 +65,7 @@ public class ShowCalendarActivity extends ActionBarActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        dbManager.close();
+        vacationRepository.close();
     }
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
@@ -69,10 +75,10 @@ public class ShowCalendarActivity extends ActionBarActivity {
             public void onSelectedDayChange(CalendarView view, int year, int month,
                                             int dayOfMonth) {
                 setSelectedDate(year, month, dayOfMonth);
-                List<Vacation> values = dbManager.readAllValues();
+                List<Vacation> values = vacationRepository.readAll();
                 String displayString = "<<";
                 for(Vacation val : values){
-                    displayString += DateUtil.formatDateString(val.getDate());
+                    displayString = displayString + DateUtil.formatDateString(val.getDate());
                 }
                 vacationInfoView.setText(displayString+">>");
             }
@@ -92,7 +98,7 @@ public class ShowCalendarActivity extends ActionBarActivity {
             @TargetApi(Build.VERSION_CODES.HONEYCOMB)
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), AddVacationActivity.class);
+                Intent intent = new Intent(applicationContext, AddVacationActivity.class);
                 intent.putExtra("vacationDate", selectedDate);
                 startActivity(intent);
             }

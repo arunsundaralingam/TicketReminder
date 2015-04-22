@@ -16,6 +16,13 @@ public class MigrationHelper extends OrmLiteSqliteOpenHelper {
         super(context, DB_NAME, null, patches.length + 1, R.raw.ormlite_config);
         this.patches = patches;
     }
+    @Override
+    public void onOpen(SQLiteDatabase db) {
+        super.onOpen(db);
+        if (!db.isReadOnly()) {
+            db.execSQL("PRAGMA foreign_keys=ON;");
+        }
+    }
 
     @Override
     public void onCreate(SQLiteDatabase database, ConnectionSource connectionSource) {

@@ -1,19 +1,45 @@
 #
-# generated on 2015/04/20 05:09:01
+# generated on 2015/04/22 03:17:19
 #
 # --table-start--
 dataClass=com.tw.ticket.models.Vacation
 tableName=vacation
 # --table-fields-start--
 # --field-start--
+fieldName=id
+generatedId=true
+# --field-end--
+# --field-start--
 fieldName=name
-columnName=name
-id=true
 # --field-end--
 # --field-start--
 fieldName=date
 dataPersister=DATE_LONG
 format=dd-MMM-yyyy
+# --field-end--
+# --table-fields-end--
+# --table-end--
+#################################
+# --table-start--
+dataClass=com.tw.ticket.models.Reminder
+tableName=reminder
+# --table-fields-start--
+# --field-start--
+fieldName=id
+generatedId=true
+# --field-end--
+# --field-start--
+fieldName=name
+indexName=reminder_name_idx
+# --field-end--
+# --field-start--
+fieldName=daysBefore
+# --field-end--
+# --field-start--
+fieldName=hours
+# --field-end--
+# --field-start--
+fieldName=minutes
 # --field-end--
 # --table-fields-end--
 # --table-end--

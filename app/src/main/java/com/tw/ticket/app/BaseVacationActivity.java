@@ -1,26 +1,32 @@
 package com.tw.ticket.app;
 
-import android.support.v7.app.ActionBarActivity;
+import android.content.Context;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
-import com.tw.ticket.db.DBManager;
+import com.tw.ticket.db.BaseRepository;
+import com.tw.ticket.models.Vacation;
 
 
 public class BaseVacationActivity extends ActionBarActivity {
-    protected DBManager dbManager;
+    protected BaseRepository<Vacation> vacationRepository;
     protected TextView vacationDateTextView;
     protected View doneButtonView;
     protected EditText vacationNameText;
+    protected Context applicationContext;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (dbManager == null) dbManager = new DBManager(getApplicationContext());
+        applicationContext = getApplicationContext();
+        if (vacationRepository == null) {
+            vacationRepository = new BaseRepository<Vacation>(applicationContext, Vacation.class);
+        }
         setContentView(R.layout.activity_base_vacation);
     }
 
@@ -31,7 +37,6 @@ public class BaseVacationActivity extends ActionBarActivity {
         return true;
     }
 
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -41,10 +46,10 @@ public class BaseVacationActivity extends ActionBarActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
-
 }
