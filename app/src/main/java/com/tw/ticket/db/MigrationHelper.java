@@ -16,6 +16,7 @@ public class MigrationHelper extends OrmLiteSqliteOpenHelper {
         super(context, DB_NAME, null, patches.length + 1, R.raw.ormlite_config);
         this.patches = patches;
     }
+
     @Override
     public void onOpen(SQLiteDatabase db) {
         super.onOpen(db);
@@ -34,7 +35,7 @@ public class MigrationHelper extends OrmLiteSqliteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase database, ConnectionSource connectionSource, int oldVersion, int newVersion) {
-        for(int i = oldVersion; i < newVersion; i++) {
+        for (int i = oldVersion; i < newVersion; i++) {
             database.execSQL(patches[i].onUpgrade());
         }
     }

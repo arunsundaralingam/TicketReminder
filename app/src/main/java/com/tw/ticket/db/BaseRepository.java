@@ -8,6 +8,7 @@ import java.util.List;
 public class BaseRepository<T> {
     protected RuntimeExceptionDao dao;
     private DBManager dbManager;
+
     public BaseRepository(Context context, Class<T> type) {
         this.dbManager = new DBManager(context);
         this.dao = dbManager.getDao(type);
@@ -21,7 +22,7 @@ public class BaseRepository<T> {
         return dao.queryForAll();
     }
 
-    public void close(){
+    public void close() {
         dbManager.close();
     }
 }

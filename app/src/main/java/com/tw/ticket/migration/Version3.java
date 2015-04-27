@@ -1,7 +1,7 @@
 package com.tw.ticket.migration;
 
 public class Version3 implements Patch {
-// insert initial Reminders
+    // insert initial Reminders
     @Override
     public String onUpgrade() {
         return "insert into Reminder(name, daysBefore, hours, minutes) values" +

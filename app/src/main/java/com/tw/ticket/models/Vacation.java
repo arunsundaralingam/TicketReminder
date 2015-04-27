@@ -12,6 +12,7 @@ public class Vacation {
     private String name;
     @DatabaseField(dataType = DataType.DATE_LONG, format = "dd-MMM-yyyy")
     private Date date;
+
     public Vacation() {
     }
 

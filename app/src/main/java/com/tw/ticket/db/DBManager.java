@@ -28,7 +28,7 @@ public class DBManager {
         db = migrationHelper.getWritableDatabase();
     }
 
-    public RuntimeExceptionDao getDao(Class model){
+    public RuntimeExceptionDao getDao(Class model) {
         return migrationHelper.getRuntimeExceptionDao(model);
     }
 

@@ -11,7 +11,8 @@ public class DateUtil {
         calendar.set(Calendar.SECOND, 0);
         calendar.set(Calendar.MILLISECOND, 0);
     }
-    public static String formatDateString(Date date){
+
+    public static String formatDateString(Date date) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy");
         return dateFormat.format(date);
     }
