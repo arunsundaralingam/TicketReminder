@@ -8,16 +8,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
-import com.tw.ticket.db.BaseRepository;
-import com.tw.ticket.models.Reminder;
-import com.tw.ticket.models.Vacation;
-import com.tw.ticket.models.VacationReminder;
+import com.tw.ticket.db.VacationReminderRepository;
 
 
 public class BaseVacationActivity extends ActionBarActivity {
-    protected BaseRepository<Vacation> vacationRepository;
-    protected BaseRepository<Reminder> reminderRepository;
-    protected BaseRepository<VacationReminder> vacationReminderRepository;
+    protected VacationReminderRepository vacationReminderRepository;
     protected TextView vacationDateTextView;
     protected View doneButtonView;
     protected EditText vacationNameText;
@@ -28,14 +23,8 @@ public class BaseVacationActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         applicationContext = getApplicationContext();
-        if (vacationRepository == null) {
-            vacationRepository = new BaseRepository<Vacation>(applicationContext, Vacation.class);
-        }
-        if (reminderRepository == null) {
-            reminderRepository = new BaseRepository<Reminder>(applicationContext, Reminder.class);
-        }
         if (vacationReminderRepository == null) {
-            vacationReminderRepository = new BaseRepository<VacationReminder>(applicationContext, VacationReminder.class);
+            vacationReminderRepository = new VacationReminderRepository(applicationContext);
         }
         setContentView(R.layout.activity_base_vacation);
     }
@@ -66,7 +55,6 @@ public class BaseVacationActivity extends ActionBarActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        vacationRepository.close();
         vacationReminderRepository.close();
     }
 }

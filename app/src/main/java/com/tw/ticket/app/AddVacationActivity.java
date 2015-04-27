@@ -37,10 +37,10 @@ public class AddVacationActivity extends BaseVacationActivity {
                 String vacationName = vacationNameText.getText().toString();
                 if (vacationName != null && !vacationName.equals("")) {
                     Vacation vacation = new Vacation(vacationName, getVacationDate());
-                    vacationRepository.addOrUpdate(vacation);
+                    vacationReminderRepository.saveVacation(vacation);
                     Reminder reminder = new Reminder("Rem1", 4, 12, 0);
-                    reminderRepository.addOrUpdate(reminder);
-                    vacationReminderRepository.addOrUpdate(new VacationReminder(vacation , reminder));
+                    vacationReminderRepository.saveReminder(reminder);
+                    vacationReminderRepository.saveVacationReminder(new VacationReminder(vacation, reminder));
                 } else {
                     UIUtil.showToast(applicationContext, "Vacation Name must be specified");
                 }
