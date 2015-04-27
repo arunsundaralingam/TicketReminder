@@ -26,6 +26,7 @@ public class MigrationHelper extends OrmLiteSqliteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase database, ConnectionSource connectionSource) {
+        //TODO : currently the migrations are done with sql scripts. need to find a way to avoid this
         for (Patch patch : patches) {
             database.execSQL(patch.onUpgrade());
         }

@@ -3,12 +3,14 @@ package com.tw.ticket.models;
 import com.j256.ormlite.field.DatabaseField;
 
 public class VacationReminder {
+    public final static String vacation_FIELD_NAME = "vacation_id";
+    public final static String reminder_FIELD_NAME = "reminder_id";
     @DatabaseField(generatedId = true)
     private int id;
-    @DatabaseField(foreign = true)
-    private Vacation vacation_id;
-    @DatabaseField(foreign = true)
-    private Reminder reminder_id;
+    @DatabaseField(foreign = true, columnName = vacation_FIELD_NAME)
+    private Vacation vacation;
+    @DatabaseField(foreign = true, columnName = reminder_FIELD_NAME)
+    private Reminder reminder;
 
     public int getId() {
         return id;
@@ -18,27 +20,27 @@ public class VacationReminder {
         this.id = id;
     }
 
-    public Vacation getVacation_id() {
-        return vacation_id;
+    public Vacation getVacation() {
+        return vacation;
     }
 
-    public void setVacation_id(Vacation vacation_id) {
-        this.vacation_id = vacation_id;
+    public void setVacation(Vacation vacation) {
+        this.vacation = vacation;
     }
 
-    public Reminder getReminder_id() {
-        return reminder_id;
+    public Reminder getReminder() {
+        return reminder;
     }
 
-    public void setReminder_id(Reminder reminder_id) {
-        this.reminder_id = reminder_id;
+    public void setReminder(Reminder reminder) {
+        this.reminder = reminder;
     }
 
     public VacationReminder() {
     }
 
-    public VacationReminder(Vacation vacation_id, Reminder reminder_id) {
-        this.vacation_id = vacation_id;
-        this.reminder_id = reminder_id;
+    public VacationReminder(Vacation vacation, Reminder reminder) {
+        this.vacation = vacation;
+        this.reminder = reminder;
     }
 }

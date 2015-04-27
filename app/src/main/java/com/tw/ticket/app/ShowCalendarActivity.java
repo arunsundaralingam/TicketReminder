@@ -12,15 +12,21 @@ import android.view.View;
 import android.widget.CalendarView;
 import android.widget.TextView;
 import com.tw.ticket.db.BaseRepository;
+import com.tw.ticket.db.ManyToManyRepository;
+import com.tw.ticket.models.Reminder;
 import com.tw.ticket.models.Vacation;
+import com.tw.ticket.models.VacationReminder;
 import com.tw.ticket.util.DateUtil;
 
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
 
 public class ShowCalendarActivity extends ActionBarActivity {
     BaseRepository<Vacation> vacationRepository;
+    ManyToManyRepository<Vacation, Reminder, VacationReminder> vacationReminderRepository;
     CalendarView calendarView;
     View buttonView;
     TextView vacationInfoView;
@@ -33,6 +39,13 @@ public class ShowCalendarActivity extends ActionBarActivity {
         applicationContext = getApplicationContext();
         if (vacationRepository == null) {
             vacationRepository = new BaseRepository<Vacation>(applicationContext, Vacation.class);
+        }
+        if (vacationReminderRepository == null) {
+            vacationReminderRepository = new ManyToManyRepository<Vacation, Reminder, VacationReminder>(
+                    applicationContext,
+                    Vacation.class,
+                    Reminder.class,
+                    VacationReminder.class);
         }
         setContentView(R.layout.activity_show_calendar);
         registerComponents();
@@ -62,10 +75,12 @@ public class ShowCalendarActivity extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
         vacationRepository.close();
+        vacationReminderRepository.close();
     }
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
@@ -75,12 +90,24 @@ public class ShowCalendarActivity extends ActionBarActivity {
             public void onSelectedDayChange(CalendarView view, int year, int month,
                                             int dayOfMonth) {
                 setSelectedDate(year, month, dayOfMonth);
-                List<Vacation> values = vacationRepository.readAll();
+                List<Vacation> vacations = vacationRepository.readAll();
                 String displayString = "<<";
-                for(Vacation val : values){
-                    displayString = displayString + DateUtil.formatDateString(val.getDate());
+                List<Reminder> reminders = new ArrayList<Reminder>();
+                for (Vacation vacation : vacations) {
+                    try {
+                        reminders = vacationReminderRepository.lookupTargetForSource(vacation,
+                                VacationReminder.vacation_FIELD_NAME,
+                                VacationReminder.reminder_FIELD_NAME);
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                    for (Reminder reminder : reminders) {
+                        displayString = displayString + (DateUtil.formatDateString(
+                                vacation.getDate()) + "--" +
+                                reminder.getName());
+                    }
                 }
-                vacationInfoView.setText(displayString+">>");
+                vacationInfoView.setText(displayString + ">>");
             }
         });
     }

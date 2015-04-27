@@ -9,11 +9,15 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import com.tw.ticket.db.BaseRepository;
+import com.tw.ticket.models.Reminder;
 import com.tw.ticket.models.Vacation;
+import com.tw.ticket.models.VacationReminder;
 
 
 public class BaseVacationActivity extends ActionBarActivity {
     protected BaseRepository<Vacation> vacationRepository;
+    protected BaseRepository<Reminder> reminderRepository;
+    protected BaseRepository<VacationReminder> vacationReminderRepository;
     protected TextView vacationDateTextView;
     protected View doneButtonView;
     protected EditText vacationNameText;
@@ -26,6 +30,12 @@ public class BaseVacationActivity extends ActionBarActivity {
         applicationContext = getApplicationContext();
         if (vacationRepository == null) {
             vacationRepository = new BaseRepository<Vacation>(applicationContext, Vacation.class);
+        }
+        if (reminderRepository == null) {
+            reminderRepository = new BaseRepository<Reminder>(applicationContext, Reminder.class);
+        }
+        if (vacationReminderRepository == null) {
+            vacationReminderRepository = new BaseRepository<VacationReminder>(applicationContext, VacationReminder.class);
         }
         setContentView(R.layout.activity_base_vacation);
     }
@@ -51,5 +61,12 @@ public class BaseVacationActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        vacationRepository.close();
+        vacationReminderRepository.close();
     }
 }

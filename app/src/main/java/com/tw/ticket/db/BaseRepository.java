@@ -6,7 +6,7 @@ import com.j256.ormlite.dao.RuntimeExceptionDao;
 import java.util.List;
 
 public class BaseRepository<T> {
-    private RuntimeExceptionDao dao;
+    protected RuntimeExceptionDao dao;
     private DBManager dbManager;
     public BaseRepository(Context context, Class<T> type) {
         this.dbManager = new DBManager(context);

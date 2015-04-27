@@ -5,7 +5,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import com.tw.ticket.models.Reminder;
 import com.tw.ticket.models.Vacation;
+import com.tw.ticket.models.VacationReminder;
 import com.tw.ticket.util.DateUtil;
 import com.tw.ticket.util.UIUtil;
 
@@ -34,7 +36,11 @@ public class AddVacationActivity extends BaseVacationActivity {
                 vacationNameText = (EditText) findViewById(R.id.vacationText);
                 String vacationName = vacationNameText.getText().toString();
                 if (vacationName != null && !vacationName.equals("")) {
-                    vacationRepository.addOrUpdate(new Vacation(vacationName, getVacationDate()));
+                    Vacation vacation = new Vacation(vacationName, getVacationDate());
+                    vacationRepository.addOrUpdate(vacation);
+                    Reminder reminder = new Reminder("Rem1", 4, 12, 0);
+                    reminderRepository.addOrUpdate(reminder);
+                    vacationReminderRepository.addOrUpdate(new VacationReminder(vacation , reminder));
                 } else {
                     UIUtil.showToast(applicationContext, "Vacation Name must be specified");
                 }
