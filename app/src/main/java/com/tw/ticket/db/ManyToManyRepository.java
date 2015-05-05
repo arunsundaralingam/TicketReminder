@@ -38,7 +38,8 @@ public class ManyToManyRepository<S, T, U> {
         manyToManyQB.where().eq(sourceFieldName, userSelectArg);
         QueryBuilder<T, Integer> targetQB = targetDao.queryBuilder();
         // TODO: This assumes all plain models have id field, need to pass id fields
-        targetQB.where().in("id", manyToManyQB);
+        String id = "id";
+        targetQB.where().in(id, manyToManyQB);
         return targetQB.prepare();
     }
 

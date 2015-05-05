@@ -1,6 +1,7 @@
 package com.tw.ticket.db;
 
 import android.content.Context;
+import com.j256.ormlite.stmt.QueryBuilder;
 import com.tw.ticket.models.Reminder;
 import com.tw.ticket.models.Vacation;
 import com.tw.ticket.models.VacationReminder;
@@ -68,4 +69,18 @@ public class VacationReminderRepository {
         vacationReminderRepository.close();
         vacationForRemindersRepository.close();
     }
+
+    public Reminder getReminderForName(String reminderNameAtIndex) {
+        QueryBuilder<Reminder, String> queryBuilder =
+                reminderRepository.getQueryBuilder();
+        List<Reminder> reminders = null;
+        try {
+            queryBuilder.where().eq("name", reminderNameAtIndex);
+            reminders = reminderRepository.executeQuery(queryBuilder.prepare());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return reminders.get(0);
+    }
+
 }

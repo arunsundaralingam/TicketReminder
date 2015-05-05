@@ -1,9 +1,13 @@
 package com.tw.ticket.app;
 
 
+import android.annotation.TargetApi;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.SparseBooleanArray;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.GridView;
 import android.widget.TextView;
 import com.tw.ticket.models.Reminder;
 import com.tw.ticket.models.Vacation;
@@ -34,18 +38,34 @@ public class AddVacationActivity extends BaseVacationActivity {
             @Override
             public void onClick(View view) {
                 vacationNameText = (EditText) findViewById(R.id.vacationText);
+                GridView gridView = (GridView) findViewById(R.id.gridView);
                 String vacationName = vacationNameText.getText().toString();
-                if (vacationName != null && !vacationName.equals("")) {
+                if (notEmpty(gridView, vacationName)) {
                     Vacation vacation = new Vacation(vacationName, getVacationDate());
-                    vacationReminderRepository.saveVacation(vacation);
-                    Reminder reminder = new Reminder("Rem1", 4, 12, 0);
-                    vacationReminderRepository.saveReminder(reminder);
-                    vacationReminderRepository.saveVacationReminder(new VacationReminder(vacation, reminder));
+                    saveVacation(gridView, vacation);
                 } else {
                     UIUtil.showToast(applicationContext, "Vacation Name must be specified");
                 }
             }
+
+            @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+            private boolean notEmpty(GridView gridView, String vacationName) {
+                return vacationName != null && !vacationName.equals("") && gridView.getCheckedItemCount() > 0;
+            }
         });
+    }
+
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    private void saveVacation(GridView gridView, Vacation vacation) {
+        vacationReminderRepository.saveVacation(vacation);
+        SparseBooleanArray checkedItemPositions = gridView.getCheckedItemPositions();
+        for(int i = 0; i < checkedItemPositions.size(); i++) {
+            if(checkedItemPositions.get(i)){
+                String reminderNameAtIndex = (String) gridView.getItemAtPosition(i);
+                Reminder reminderForName = vacationReminderRepository.getReminderForName(reminderNameAtIndex);
+                vacationReminderRepository.saveVacationReminder(new VacationReminder(vacation, reminderForName));
+            }
+        }
     }
 
     private Date getVacationDate() {

@@ -1,14 +1,23 @@
 package com.tw.ticket.app;
 
+import android.annotation.TargetApi;
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.GridView;
 import android.widget.TextView;
+import com.google.common.base.Function;
+import com.google.common.collect.Lists;
 import com.tw.ticket.db.VacationReminderRepository;
+import com.tw.ticket.models.Reminder;
+
+import java.util.List;
 
 
 public class BaseVacationActivity extends ActionBarActivity {
@@ -27,6 +36,24 @@ public class BaseVacationActivity extends ActionBarActivity {
             vacationReminderRepository = new VacationReminderRepository(applicationContext);
         }
         setContentView(R.layout.activity_base_vacation);
+        populateReminderCheckBoxes();
+    }
+
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    private void populateReminderCheckBoxes() {
+        List<Reminder> reminders = vacationReminderRepository.readAllReminders();
+        Function<Reminder, String> reminderNamesFn = new Function<Reminder, String>() {
+            public String apply(Reminder r) {
+                return r.getName();
+            }
+        };
+
+        List<String> reminderNames = Lists.transform(reminders, reminderNamesFn);
+        ArrayAdapter<String> reminderNameAdapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_list_item_multiple_choice, reminderNames);
+        GridView remindersGrid = (GridView) findViewById(R.id.gridView);
+        remindersGrid.setAdapter(reminderNameAdapter);
+        remindersGrid.setChoiceMode(2);
     }
 
     @Override

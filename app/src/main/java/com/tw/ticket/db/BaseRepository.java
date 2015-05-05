@@ -2,6 +2,8 @@ package com.tw.ticket.db;
 
 import android.content.Context;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
+import com.j256.ormlite.stmt.PreparedQuery;
+import com.j256.ormlite.stmt.QueryBuilder;
 
 import java.util.List;
 
@@ -24,5 +26,13 @@ public class BaseRepository<T> {
 
     public void close() {
         dbManager.close();
+    }
+
+    public List<T> executeQuery(PreparedQuery<T> query) {
+        return dao.query(query);
+    }
+
+    public QueryBuilder<T, String> getQueryBuilder() {
+        return dao.queryBuilder();
     }
 }
