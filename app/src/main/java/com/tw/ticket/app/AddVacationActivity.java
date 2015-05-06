@@ -59,7 +59,7 @@ public class AddVacationActivity extends BaseVacationActivity {
     private void saveVacation(GridView gridView, Vacation vacation) {
         vacationReminderRepository.saveVacation(vacation);
         SparseBooleanArray checkedItemPositions = gridView.getCheckedItemPositions();
-        for(int i = 0; i < checkedItemPositions.size(); i++) {
+        for(int i = 0; i < gridView.getAdapter().getCount(); i++) {
             if(checkedItemPositions.get(i)){
                 String reminderNameAtIndex = (String) gridView.getItemAtPosition(i);
                 Reminder reminderForName = vacationReminderRepository.getReminderForName(reminderNameAtIndex);

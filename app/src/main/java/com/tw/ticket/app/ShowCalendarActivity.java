@@ -5,23 +5,26 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.CalendarView;
 import android.widget.TextView;
+import com.roomorama.caldroid.CaldroidFragment;
+import com.roomorama.caldroid.CaldroidListener;
 import com.tw.ticket.db.VacationReminderRepository;
 import com.tw.ticket.models.Reminder;
 import com.tw.ticket.models.Vacation;
 import com.tw.ticket.util.DateUtil;
+import org.joda.time.DateTime;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 
 public class ShowCalendarActivity extends ActionBarActivity {
-    CalendarView calendarView;
+    CaldroidFragment calendarView;
     View buttonView;
     TextView vacationInfoView;
     long selectedDate;
@@ -37,9 +40,9 @@ public class ShowCalendarActivity extends ActionBarActivity {
         }
         setContentView(R.layout.activity_show_calendar);
         registerComponents();
-        registerCalendarListener();
         registerAddButtonListener();
-        selectedDate = calendarView.getDate();
+        Calendar c = Calendar.getInstance();
+        selectedDate = c.get(Calendar.SECOND);
     }
 
     @Override
@@ -50,56 +53,31 @@ public class ShowCalendarActivity extends ActionBarActivity {
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
     protected void onDestroy() {
         super.onDestroy();
         vacationReminderRepository.close();
     }
 
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    private void registerCalendarListener() {
-        calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
-            @Override
-            public void onSelectedDayChange(CalendarView view, int year, int month,
-                                            int dayOfMonth) {
-                setSelectedDate(year, month, dayOfMonth);
-                List<Vacation> vacations = vacationReminderRepository.readAllVacations();
-                String displayString = "<<";
-                List<Reminder> reminders;
-                for (Vacation vacation : vacations) {
-                    reminders = vacationReminderRepository.getRemindersForVacation(vacation);
-                    for (Reminder reminder : reminders) {
-                        displayString = displayString + (DateUtil.formatDateString(
-                                vacation.getDate()) + "--" +
-                                reminder.getName());
-                    }
+    private final CaldroidListener caldroidListener = new CaldroidListener() {
+        @Override
+        public void onSelectDate(Date date, View view) {
+            selectedDate= new DateTime(date).withTimeAtStartOfDay().getMillis();
+            calendarView.setTextColorForDate(R.color.GREEN_COLOR, date);
+            calendarView.refreshView();
+            List<Vacation> vacations = vacationReminderRepository.readAllVacations();
+            String displayString = "<<";
+            List<Reminder> reminders;
+            for (Vacation vacation : vacations) {
+                reminders = vacationReminderRepository.getRemindersForVacation(vacation);
+                for (Reminder reminder : reminders) {
+                    displayString = displayString + (DateUtil.formatDateString(
+                            vacation.getDate()) + "--" +
+                            reminder.getName());
                 }
-                vacationInfoView.setText(displayString + ">>");
             }
-        });
-    }
-
-    private void setSelectedDate(int year, int month, int dayOfMonth) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(year, month, dayOfMonth);
-        DateUtil.resetTimeToMidnight(calendar);
-        selectedDate = calendar.getTime().getTime();
-    }
-
+            vacationInfoView.setText(displayString + ">>");
+        }
+    };
 
     private void registerAddButtonListener() {
         buttonView.setOnClickListener(new View.OnClickListener() {
@@ -115,7 +93,20 @@ public class ShowCalendarActivity extends ActionBarActivity {
 
     private void registerComponents() {
         vacationInfoView = (TextView) findViewById(R.id.vacationInfo);
-        calendarView = (CalendarView) findViewById(R.id.calendarView);
         buttonView = findViewById(R.id.vacationButton);
+        prepareCalendarView();
+    }
+
+    private void prepareCalendarView() {
+        calendarView = new CaldroidFragment();
+        Bundle args = new Bundle();
+        Calendar cal = Calendar.getInstance();
+        args.putInt(CaldroidFragment.MONTH, cal.get(Calendar.MONTH) + 1);
+        args.putInt(CaldroidFragment.YEAR, cal.get(Calendar.YEAR));
+        calendarView.setArguments(args);
+        calendarView.setCaldroidListener(caldroidListener);
+        FragmentTransaction t = getSupportFragmentManager().beginTransaction();
+        t.replace(R.id.calendarView, calendarView);
+        t.commit();
     }
 }
